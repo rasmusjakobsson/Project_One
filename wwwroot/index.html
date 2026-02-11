@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine Hits</title>
+    <script>
+        async function fetchSearchResults() {
+            const inputField = document.getElementById('searchInput');
+            const query = inputField.value.trim();
+
+            if (!query) {
+                alert('Please enter one or more words.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: query
+                });
+
+                console.log({response});
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch search results.');
+                }
+
+                const results = await response.json();
+                console.log({results});
+                const resultsContainer = document.getElementById('results');
+                resultsContainer.innerHTML = ''; // Clear previous results
+
+                for (const result of results) {
+                    if (result.Errors && result.Errors.length > 0) {
+                        const errorItem = document.createElement('p');
+                        errorItem.textContent = `${result.Engine}: Error - ${result.Errors.join(', ')}`;
+                        resultsContainer.appendChild(errorItem);
+                    } else {
+                        setNumberOfHits(result.engine, result.totalHits);
+                    }
+                }
+
+            } catch (error) {
+                console.error(error.message);
+            }
+
+            function setNumberOfHits(engineName, hits) {
+                if (hits === 0) {
+                    return;
+                }
+                const resultItem = document.createElement('p');
+                resultItem.textContent = `${engineName}: ${hits} hits`;
+                document.getElementById('results').appendChild(resultItem);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Search Engine Hits</h1>
+    <input type="text" id="searchInput" placeholder="Enter words to search">
+    <button onclick="fetchSearchResults()">Search</button>
+    <div id="results"></div>
+</body>
+</html>
