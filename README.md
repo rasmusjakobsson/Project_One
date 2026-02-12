@@ -39,7 +39,7 @@ The application requires the following environment variables:
 - `ALTA_VISTA_API_KEY`: API key for accessing the AltaVista search engine.
 - `CLASSIC_SONG_API_KEY`: API key for accessing the ClassicSongSearch engine.
 
-### Setting Environment Variables on macOS
+### Setting Environment Variables
 
 1. Open your terminal.
 2. Add the environment variables to your shell configuration file (e.g., `~/.zshrc` or `~/.bash_profile`):
